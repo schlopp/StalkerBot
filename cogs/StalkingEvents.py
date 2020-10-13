@@ -54,7 +54,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         user_id = {
             141231597155385344: [megan, sapnap],
             322542134546661388: [megan],
-            413797321273245696: [hero, megan]
+            #413797321273245696: [hero, megan]
         }
 
         # Filter out bots
