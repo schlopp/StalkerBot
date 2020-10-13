@@ -117,6 +117,8 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         for row in user_filters:
             settings_dict[row['userid']]['filters']['userfilters'].append(row['userfilter'])  # Add the item to a list
 
+        members_in_guild = {i.id: i for i in await message.guild.query_members(user_ids=id_list)}
+
         # Go through the settings for the users and see if we should bother messaging them
         already_sent = []  # Users who were already sent a DM
         for row in keyword_rows + server_keyword_rows:
@@ -130,10 +132,13 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                 continue
 
             # Grab the member object
-            try:
-                member = guild.get_member(user_id) or await guild.fetch_member(user_id)
-            except discord.HTTPException:
+            # try:
+            #     member = guild.get_member(user_id) or await guild.fetch_member(user_id)
+            # except discord.HTTPException:
+            #     continue
+            if user_id not in members_in_guild:
                 continue
+            member = members_in_guild[user_id]
 
             # If the keyword is only for a certain guild and it ISNT this one, continue
             if row.get('serverid') is not None and message.guild.id != row['serverid']:
