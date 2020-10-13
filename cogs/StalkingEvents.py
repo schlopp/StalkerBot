@@ -134,8 +134,9 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                 continue
 
             # Only DM the user if they're in the server where the keyword was triggered
-            member = guild.get_member(user_id)
-            if member is None:
+            try:
+                member = guild.fetch_member(user_id)
+            except Exception:
                 continue
 
             # If the keyword is only for a certain guild and it ISNT this one, continue
