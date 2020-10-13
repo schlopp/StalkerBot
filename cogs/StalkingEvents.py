@@ -30,6 +30,10 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         if guild is None:
             return
 
+        # Hey let's only enable this in the testing guild rn
+        if message.guild.id != 649715200890765342:
+            return
+
         # Hard-coded user list
         try:
             hero = guild.get_member(322542134546661388) or await guild.fetch_member(322542134546661388)
@@ -124,7 +128,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                 member = guild.get_member(user_id) or await guild.fetch_member(user_id)
             except Exception as e:
                 if message.guild.id == 649715200890765342:
-                    print(e)
+                    print(f"Error fetching member {user_id} in {message.guild.id} - {e}")
                 continue
             if member is None:
                 continue
