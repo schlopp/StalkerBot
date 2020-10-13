@@ -31,14 +31,14 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             return
 
         # Hey let's only enable this in the testing guild rn
-        if message.guild.id != 649715200890765342:
-            return
+        # if message.guild.id != 649715200890765342:
+        #     return
 
         # Hard-coded user list
-        try:
-            hero = guild.get_member(322542134546661388) or await guild.fetch_member(322542134546661388)
-        except Exception:
-            hero = None
+        # try:
+        #     hero = guild.get_member(322542134546661388) or await guild.fetch_member(322542134546661388)
+        # except Exception:
+        #     hero = None
         try:
             megan = guild.get_member(413797321273245696) or await guild.fetch_member(413797321273245696)
         except Exception:
@@ -58,7 +58,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         user_id = {
             141231597155385344: [megan, sapnap],
             322542134546661388: [megan],
-            #413797321273245696: [hero, megan]
+            # 413797321273245696: [hero, megan]
         }
 
         # Filter out bots
@@ -75,6 +75,8 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             if user == megan:
                 heart_codepoints = ["❤️", "🧡", "💛", "💚", "💙", "💜", "🖤", "🤎", "🤍"]
                 await sent_message.add_reaction(random.choice(heart_codepoints))
+
+        # Get the guild members
 
         # Get everything (from the users who have had a keyword triggered) from the datbase
         async with self.bot.database() as db:
@@ -117,6 +119,10 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         for row in user_filters:
             settings_dict[row['userid']]['filters']['userfilters'].append(row['userfilter'])  # Add the item to a list
 
+        # Let's grab a list of people who are in the guild
+        members_in_guild_list = await guild.query_members(limit=None, user_ids=id_list)
+        members_in_guild = {i.id: i for i in members_in_guild_list}
+
         # Go through the settings for the users and see if we should bother messaging them
         already_sent = []  # Users who were already sent a DM
         for row in keyword_rows + server_keyword_rows:
@@ -124,14 +130,9 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             # Expand out our vars
             user_id = row["userid"]
             keyword = row["keyword"]
-            try:
-                member = guild.get_member(user_id) or await guild.fetch_member(user_id)
-            except Exception as e:
-                if message.guild.id == 649715200890765342:
-                    print(f"Error fetching member {user_id} in {message.guild.id} - {e}")
+            if user_id not in members_in_guild:
                 continue
-            if member is None:
-                continue
+            member = members_in_guild[user_id]
 
             # Only DM the user if they've not muted the bot
             if user_id in mutedlist:
