@@ -1,10 +1,18 @@
 import json
 import glob
 import os
+import logging
+import sys
 
 import discord
 from discord.ext import commands, tasks
 import asyncpg
+
+
+logging.basicConfig(stream=sys.stdout)
+logging.getLogger("discord").setLevel(logging.INFO)
+logger = logging.getLogger("stalkerbot")
+logger.setLevel(logging.DEBUG)
 
 
 with open("config.json") as a:
@@ -59,9 +67,14 @@ async def get_prefix(bot, message):
     return commands.when_mentioned_or(prefix)(bot,message)
 
 
-bot = commands.AutoShardedBot(command_prefix=get_prefix)
+intents = discord.Intents.default()
+intents.typing = False
+intents.presences = False
+
+bot = commands.AutoShardedBot(command_prefix=get_prefix, intents=intents)
 bot.database_auth = database_auth
 bot.database = DatabaseConnection
+bot.logger = logger
 
 
 @bot.event

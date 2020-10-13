@@ -29,65 +29,63 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         if not self.bot.is_ready():
             return
 
-        # Checks that it isn't a DM
-        guild = message.guild
-        if guild is None:
-            return
-
-        # Hey let's only enable this in the testing guild rn
-        # if message.guild.id != 649715200890765342:
-        #     return
-
-        # Hard-coded user list
-        # try:
-        #     hero = guild.get_member(322542134546661388) or await guild.fetch_member(322542134546661388)
-        # except Exception:
-        #     hero = None
-        try:
-            megan = guild.get_member(413797321273245696) or await guild.fetch_member(413797321273245696)
-        except Exception:
-            megan = None
-        # try:
-        #     aiko = guild.get_member(590794167362388011) or await guild.fetch_member(590794167362388011)
-        # except Exception:
-        #     aiko = None
-        try:
-            sapnap = guild.get_member(606044593624055820) or await guild.fetch_member(606044593624055820)
-        except Exception:
-            sapnap = None
-
-        channel = message.channel
-
-        # Stalk people list
-        user_id = {
-            141231597155385344: [megan, sapnap],
-            322542134546661388: [megan],
-            # 413797321273245696: [hero, megan]
-        }
-
         # Filter out bots
         if message.author.bot:
             return
 
-        # Sends a message to a list of users whenever anyUser ID matches with the user_id in the stalk people list :tm: list
-        anyUser = user_id.get(message.author.id, [])
-        for user in anyUser:
+        # Checks that it isn't a DM
+        guild = message.guild
+        if guild is None:
+            return
+        channel = message.channel
+
+        # Stalk people list
+        all_message_stalks = {'megan': 413797321273245696, 'sapnap': 606044593624055820}
+        user_id = {
+            141231597155385344: ['megan', 'sapnap'],
+            322542134546661388: ['megan'],
+        }
+
+        # Sends a message to a list of users whenever user_dm_list ID matches with the user_id in the stalk people list :tm: list
+        user_dm_list = user_id.get(message.author.id, [])
+        for user_name in user_dm_list:
+
+            # Try and grab the member object
+            self.bot.logger.debug(f"Trying to send message {message.id} by {message.author.id} to '{user_name}'")
+            try:
+                user_id = all_message_stalks.get(user_name)
+                assert user_id is not None
+                user = guild.get_member(user_id) or await guild.fetch_member(user_id)
+            except (AssertionError, discord.HTTPException):
+                continue
             if user is None:
                 continue
-            if channel.permissions_for(user).read_messages:
+
+            # Make sure they can read messages
+            if not channel.permissions_for(user).read_messages:
+                continue
+
+            # Send message
+            self.bot.logger.info(f"Sending message {message.id} by {message.author.id} to {user.id} as part of all message stalking")
+            try:
                 sent_message = await user.send(f"<@!{message.author.id}> ({message.author.name}) has typed in <#{message.channel.id}>. They typed `{message.content[:1900]}` {(message.jump_url)}")
-            if user == megan:
+            except discord.HTTPException:
+                continue
+
+            # We stan Megan
+            if user_name == 'megan':
                 heart_codepoints = ["❤️", "🧡", "💛", "💚", "💙", "💜", "🖤", "🤎", "🤍"]
                 await sent_message.add_reaction(random.choice(heart_codepoints))
 
         # Get everything (from the users who have had a keyword triggered) from the datbase
         async with self.bot.database() as db:
+
             # Grab users whose keywords have been triggered
             keyword_rows = await db("SELECT * from keywords WHERE $1 LIKE concat('%', keyword, '%')", message.content.lower())
             server_keyword_rows = await db("SELECT * from serverkeywords WHERE $1 LIKE concat('%', keyword, '%')", message.content.lower())
 
             # Filter out those who have the bot muted
-            muted = await db("SELECT * FROM tempmute WHERE time > timezone('utc', now())")
+            muted = await db("SELECT * FROM tempmute WHERE time > TIMEZONE('UTC', NOW())")
             mutedlist = [user['userid'] for user in muted]
 
             # Make a list of people who we might actually DM so we can only grab THEIR settings from the database
@@ -136,13 +134,12 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                 continue
 
             # Grab the member object
+            self.bot.logger.debug(f"Grabbing member {user_id} in guild {guild.id}")
             try:
                 member = guild.get_member(user_id) or await guild.fetch_member(user_id)
             except discord.HTTPException:
+                self.bot.logger.debug(f"Member {user_id} in guild {guild.id} doesn't exist :/")
                 continue
-            # if user_id not in members_in_guild:
-            #     continue
-            # member = members_in_guild[user_id]
 
             # If the keyword is only for a certain guild and it ISNT this one, continue
             if row.get('serverid') is not None and message.guild.id != row['serverid']:
@@ -199,6 +196,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                     sendable_content = {'content': self.create_message_string(message, keyword)}
 
             # Try and send it to them
+            self.bot.logger.info(f"Sending message {message.id} by {message.author.id} to {member.id} for keyword trigger")
             try:
                 await member.send(**sendable_content)
             except discord.HTTPException:
