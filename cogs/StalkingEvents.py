@@ -76,8 +76,6 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                 heart_codepoints = ["❤️", "🧡", "💛", "💚", "💙", "💜", "🖤", "🤎", "🤍"]
                 await sent_message.add_reaction(random.choice(heart_codepoints))
 
-        # Get the guild members
-
         # Get everything (from the users who have had a keyword triggered) from the datbase
         async with self.bot.database() as db:
             # Grab users whose keywords have been triggered
@@ -85,7 +83,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             server_keyword_rows = await db("SELECT * from serverkeywords WHERE $1 LIKE concat('%', keyword, '%')", message.content.lower())
 
             # Filter out those who have the bot muted
-            muted = await db("SELECT * FROM tempmute WHERE time > timezone('utc',now())")
+            muted = await db("SELECT * FROM tempmute WHERE time > timezone('utc', now())")
             mutedlist = [user['userid'] for user in muted]
 
             # Make a list of people who we might actually DM so we can only grab THEIR settings from the database
@@ -119,10 +117,6 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         for row in user_filters:
             settings_dict[row['userid']]['filters']['userfilters'].append(row['userfilter'])  # Add the item to a list
 
-        # Let's grab a list of people who are in the guild
-        members_in_guild_list = await guild.query_members(limit=None, user_ids=id_list)
-        members_in_guild = {i.id: i for i in members_in_guild_list}
-
         # Go through the settings for the users and see if we should bother messaging them
         already_sent = []  # Users who were already sent a DM
         for row in keyword_rows + server_keyword_rows:
@@ -130,18 +124,15 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             # Expand out our vars
             user_id = row["userid"]
             keyword = row["keyword"]
-            if user_id not in members_in_guild:
-                continue
-            member = members_in_guild[user_id]
 
             # Only DM the user if they've not muted the bot
             if user_id in mutedlist:
                 continue
 
-            # Only DM the user if they're in the server where the keyword was triggered
+            # Grab the member object
             try:
-                member = await guild.fetch_member(user_id)
-            except Exception:
+                member = guild.get_member(user_id) or await guild.fetch_member(user_id)
+            except discord.HTTPException:
                 continue
 
             # If the keyword is only for a certain guild and it ISNT this one, continue
