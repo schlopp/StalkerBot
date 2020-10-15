@@ -67,12 +67,12 @@ async def get_prefix(bot, message):
     return commands.when_mentioned_or(prefix)(bot,message)
 
 
-intents = discord.Intents.default()
-intents.typing = False
-intents.presences = False
-#intents.members = False
+# intents = discord.Intents.default()
+# intents.typing = False
+# intents.presences = False
+# intents.members = False
 
-bot = commands.AutoShardedBot(command_prefix=get_prefix, intents=intents)
+bot = commands.AutoShardedBot(command_prefix=get_prefix)
 bot.database_auth = database_auth
 bot.database = DatabaseConnection
 bot.logger = logger
