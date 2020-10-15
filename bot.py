@@ -70,6 +70,7 @@ async def get_prefix(bot, message):
 intents = discord.Intents.default()
 intents.typing = False
 intents.presences = False
+intents.members = True
 
 bot = commands.AutoShardedBot(command_prefix=get_prefix, intents=intents)
 bot.database_auth = database_auth
