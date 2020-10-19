@@ -40,7 +40,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         channel = message.channel
 
         # Stalk people list
-        all_message_stalks = {'megan': 413797321273245696, 'sapnap': 606044593624055820}
+        all_message_stalks = {}  #{'megan': 413797321273245696, 'sapnap': 606044593624055820}
         user_id = {
             141231597155385344: ['megan', 'sapnap'],
             322542134546661388: ['megan'],
@@ -75,7 +75,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             # We stan Megan
             if user_name == 'megan':
                 heart_codepoints = ["❤️", "🧡", "💛", "💚", "💙", "💜", "🖤", "🤎", "🤍"]
-                await sent_message.add_reaction(random.choice(heart_codepoints))
+                #await sent_message.add_reaction(random.choice(heart_codepoints))
 
         # Get everything (from the users who have had a keyword triggered) from the datbase
         async with self.bot.database() as db:
@@ -122,7 +122,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         # members_in_guild = {i.id: i for i in await message.guild.query_members(user_ids=id_list)}
 
         # Go through the settings for the users and see if we should bother messaging them
-        already_sent = []  # Users who were already sent a DM
+        already_sent = set()  # Users who were already sent a DM
         for row in keyword_rows + server_keyword_rows:
 
             # Expand out our vars
@@ -133,20 +133,27 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             if user_id in mutedlist:
                 continue
 
+            # Don't DM the user if we already sent them something
+            if user_id in already_sent:
+                continue
+
             # Grab the member object
             self.bot.logger.debug(f"Grabbing member {user_id} in guild {guild.id}")
             try:
                 member = guild.get_member(user_id) or await guild.fetch_member(user_id)
-            except discord.HTTPException:
+                assert member is not None
+            except (AssertionError, discord.HTTPException):
                 self.bot.logger.debug(f"Member {user_id} in guild {guild.id} doesn't exist :/")
                 continue
 
             # If the keyword is only for a certain guild and it ISNT this one, continue
             if row.get('serverid') is not None and message.guild.id != row['serverid']:
+                self.bot.logger.debug(f"Not sending message to {user_id} because of guild specific keyword")
                 continue
 
             # Checks if the author of the message is the member and checks if the member's settings allow for owntrigger
             if message.author == member and settings_dict[member.id]['settings'].get('owntrigger', True) is False:
+                self.bot.logger.debug(f"Not sending message to {user_id} because of owntrigger")
                 continue
 
             # Filter out quoted text if the user doesn't want any
@@ -162,25 +169,31 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             # Deal with filters
             for guild_id in settings_dict[member.id]['filters']['serverfilters']:
                 if guild_id == message.guild.id:
+                    self.bot.logger.debug(f"Not sending message to {user_id} because of server filter")
                     content = None
             for channel_id in settings_dict[member.id]['filters']['channelfilters']:
                 if channel_id == message.channel.id:
+                    self.bot.logger.debug(f"Not sending message to {user_id} because of channel filter")
                     content = None
             for user_id in settings_dict[member.id]['filters']['userfilters']:
                 if user_id == message.author.id:
+                    self.bot.logger.debug(f"Not sending message to {user_id} because of user filter")
                     content = None
-            for keyword in settings_dict[member.id]['filters']['textfilters']:
-                if keyword.lower() in message.content.lower() and content is not None:
-                    content = re.sub(re.escape(keyword), "", content)
+            for kw in settings_dict[member.id]['filters']['textfilters']:
+                if kw.lower() in message.content.lower() and content is not None:
+                    content = re.sub(re.escape(kw), "", content)
 
             # If there's no content to be examined, let's just skip the message
             if content is None or content.strip() == "":
+                self.bot.logger.debug(f"Not sending message to {user_id} because of text filter")
                 continue
 
             # See if we should send them a message
-            if keyword not in content.lower():
+            if keyword.lower() not in content.lower():
+                self.bot.logger.debug(f"Not sending message to {user_id} because of text filter")
                 continue
             if channel.permissions_for(member).read_messages is False:
+                self.bot.logger.debug(f"Not sending message to {user_id} because of missing permissions")
                 continue
 
             # Generate the content to be sent to the user
@@ -201,7 +214,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                 await member.send(**sendable_content)
             except discord.HTTPException:
                 pass
-            already_sent.append(member.id)
+            already_sent.add(member.id)
 
     def create_message_embed(self, message:typing.Union[discord.Message, typing.Tuple[discord.Message]], keyword:str=None) -> discord.Embed:
         """Creates a message embed that can be DMd to a user"""
