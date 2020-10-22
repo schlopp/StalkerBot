@@ -39,6 +39,11 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             return
         channel = message.channel
 
+        # React with eyes if message contains "Stalker" lol (only on Voxel Fox)
+        if guild.id == 208895639164026880:
+            if "stalker" in message.content.lower:
+                await message.add_reaction("👀")
+        
         # Stalk people list
         all_message_stalks = {}  #{'megan': 413797321273245696, 'sapnap': 606044593624055820}
         user_id = {
