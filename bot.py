@@ -68,6 +68,7 @@ async def get_prefix(bot, message):
 
 
 intents = discord.Intents.default()
+intents.members = False  # Damn you to heck Discord
 intents.typing = False
 intents.presences = False
 
