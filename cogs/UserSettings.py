@@ -72,7 +72,7 @@ class UserSettings(commands.Cog, name="User Setting Commands"):
         options = [
             f"1\N{COMBINING ENCLOSING KEYCAP} Would you like to trigger your own keywords? (currently {owntrigger})",
             f"2\N{COMBINING ENCLOSING KEYCAP} Would you like to be DMed if your keyword is said in a quote? (currently {quotetrigger})",
-            f"3\N{COMBINING ENCLOSING KEYCAP} Would you like the DMs to be embedded? (currently {embedmessage})"
+            f"3\N{COMBINING ENCLOSING KEYCAP} Would you like the DMs to be embedded? (currently {embedmessage})",
             f"4\N{COMBINING ENCLOSING KEYCAP} Would you like to be DMed on message edits? (currently {editmessage})"
         ]
 
@@ -131,7 +131,7 @@ class UserSettings(commands.Cog, name="User Setting Commands"):
             newOptions = [
                 f"1\N{COMBINING ENCLOSING KEYCAP} Would you like to trigger your own keywords? (currently {owntrigger})",
                 f"2\N{COMBINING ENCLOSING KEYCAP} Would you like to be DMed if your keyword is said in a quote? (currently {quotetrigger})",
-                f"3\N{COMBINING ENCLOSING KEYCAP} Would you like the DMs to be embedded? (currently {embedmessage})"
+                f"3\N{COMBINING ENCLOSING KEYCAP} Would you like the DMs to be embedded? (currently {embedmessage})",
                 f"4\N{COMBINING ENCLOSING KEYCAP} Would you like to be DMed on message edits? (currently {editmessage})"
             ]
             await message.edit(content=("\n".join(newOptions)))
