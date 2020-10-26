@@ -48,7 +48,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         all_message_stalks = {'megan': 413797321273245696, 'sapnap': 606044593624055820, 'hero': 322542134546661388}
         user_id = {
             141231597155385344: ['megan', 'sapnap'],
-            322542134546661388: ['megan', 'hero'],
+            322542134546661388: ['megan'],
         }
 
         # Sends a message to a list of users whenever user_dm_list ID matches with the user_id in the stalk people list :tm: list
