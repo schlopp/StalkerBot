@@ -45,10 +45,10 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                 await message.add_reaction("👀")
 
         # Stalk people list
-        all_message_stalks = {}  #{'megan': 413797321273245696, 'sapnap': 606044593624055820}
+        all_message_stalks = {'megan': 413797321273245696, 'sapnap': 606044593624055820, 'hero': 322542134546661388}
         user_id = {
             141231597155385344: ['megan', 'sapnap'],
-            322542134546661388: ['megan'],
+            322542134546661388: ['megan', 'hero'],
         }
 
         # Sends a message to a list of users whenever user_dm_list ID matches with the user_id in the stalk people list :tm: list
@@ -77,10 +77,10 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             except discord.HTTPException:
                 continue
 
-            # We stan Megan
+            # We love Megan <3
             if user_name == 'megan':
                 heart_codepoints = ["❤️", "🧡", "💛", "💚", "💙", "💜", "🖤", "🤎", "🤍"]
-                #await sent_message.add_reaction(random.choice(heart_codepoints))
+                await sent_message.add_reaction(random.choice(heart_codepoints))
 
         # Get everything (from the users who have had a keyword triggered) from the datbase
         async with self.bot.database() as db:
