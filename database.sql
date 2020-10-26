@@ -18,7 +18,8 @@ create TABLE usersettings(
     userid bigint primary key,
     owntrigger boolean default true,
     quotetrigger boolean default true,
-    embedmessage boolean default false
+    embedmessage boolean default false,
+    editmessage boolean default true
 );
 
 create TABLE textfilters(

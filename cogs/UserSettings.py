@@ -13,9 +13,9 @@ class UserSettings(commands.Cog, name="User Setting Commands"):
         """Allows users to change individual settings quickly"""
 
         # See if they provided a valid setting
-        valid_settings = ("owntrigger", "quotetrigger", "embedmessage",)
+        valid_settings = ("owntrigger", "quotetrigger", "embedmessage", "editmessage",)
         if setting is None or setting.lower() not in valid_settings:
-            return await ctx.send("You didn't select a valid setting to switch. The available settings are `owntrigger`, `quotetrigger`, and `embedmessage`.")
+            return await ctx.send("You didn't select a valid setting to switch. The available settings are `owntrigger`, `quotetrigger`, `embedmessage`, and `editmessage`.")
         setting = setting.lower()
 
         # Get the current settings for a user
@@ -30,6 +30,7 @@ class UserSettings(commands.Cog, name="User Setting Commands"):
                 'owntrigger': True,
                 'quotetrigger': True,
                 'embedmessage': False,
+                'editmessage': True,
             }
 
         # Update settings
@@ -39,8 +40,8 @@ class UserSettings(commands.Cog, name="User Setting Commands"):
         # Run database query
         await db(
             """INSERT INTO usersettings (userid, owntrigger, quotetrigger, embedmessage) VALUES
-            ($1, $2, $3, $4) ON conflict (userid) DO UPDATE SET owntrigger=$2, quotetrigger=$3, embedmessage=$4""",
-            ctx.author.id, updated_settings['owntrigger'], updated_settings['quotetrigger'], updated_settings['embedmessage'],
+            ($1, $2, $3, $4) ON conflict (userid) DO UPDATE SET owntrigger=$2, quotetrigger=$3, embedmessage=$4, editmessage=$5""",
+            ctx.author.id, updated_settings['owntrigger'], updated_settings['quotetrigger'], updated_settings['embedmessage'], updated_settings['editmessage'],
         )
         await db.disconnect()
 
@@ -49,7 +50,7 @@ class UserSettings(commands.Cog, name="User Setting Commands"):
 
     @commands.command(aliases=['setup'])
     async def settings(self, ctx):
-        """Allows users to change settings (such as OwnTrigger, QuoteTrigger, and EmbedMessage)"""
+        """Allows users to change settings (such as OwnTrigger, QuoteTrigger, EmbedMessage, and EditMessage)"""
 
         # Get the current settings for a user
         async with self.bot.database() as db:
@@ -60,16 +61,19 @@ class UserSettings(commands.Cog, name="User Setting Commands"):
             owntrigger = existingSettings[0]['owntrigger']
             quotetrigger = existingSettings[0]['quotetrigger']
             embedmessage = existingSettings[0]['embedmessage']
+            editmessage = existingSettings[0]['editmessage']
         else:
             owntrigger = True
             quotetrigger = True
             embedmessage = False
+            editmessage = True
 
         # Options list so it looks good in the message
         options = [
             f"1\N{COMBINING ENCLOSING KEYCAP} Would you like to trigger your own keywords? (currently {owntrigger})",
             f"2\N{COMBINING ENCLOSING KEYCAP} Would you like to be DMed if your keyword is said in a quote? (currently {quotetrigger})",
             f"3\N{COMBINING ENCLOSING KEYCAP} Would you like the DMs to be embedded? (currently {embedmessage})"
+            f"4\N{COMBINING ENCLOSING KEYCAP} Would you like to be DMed on message edits? (currently {editmessage})"
         ]
 
         # Sends the initial message
@@ -78,6 +82,7 @@ class UserSettings(commands.Cog, name="User Setting Commands"):
         await message.add_reaction("1\N{COMBINING ENCLOSING KEYCAP}")
         await message.add_reaction("2\N{COMBINING ENCLOSING KEYCAP}")
         await message.add_reaction("3\N{COMBINING ENCLOSING KEYCAP}")
+        await message.add_reaction("4\N{COMBINING ENCLOSING KEYCAP}")
         await message.add_reaction("\N{WHITE HEAVY CHECK MARK}")
 
         # List of valid emojis the user can react with
@@ -85,6 +90,7 @@ class UserSettings(commands.Cog, name="User Setting Commands"):
             "1\N{COMBINING ENCLOSING KEYCAP}",
             "2\N{COMBINING ENCLOSING KEYCAP}",
             "3\N{COMBINING ENCLOSING KEYCAP}",
+            "4\N{COMBINING ENCLOSING KEYCAP}",                
             "\N{WHITE HEAVY CHECK MARK}"
         ]
 
@@ -116,12 +122,17 @@ class UserSettings(commands.Cog, name="User Setting Commands"):
                     await db("INSERT into usersettings (userid, embedmessage) VALUES ($1, $2) on conflict (userid) do update set embedmessage = $2", ctx.author.id, not embedmessage)
                 embedmessage = not embedmessage
             elif reaction.emoji == validEmoji[3]:
+                async with self.bot.database() as db:
+                    await db("INSERT into usersettings (userid, editmessage) VALUES ($1, $2) on conflict (userid) do update set editmessage = $2", ctx.author.id, not editmessage)
+                editmessage = not editmessage
+            elif reaction.emoji == validEmoji[4]:
                 break
 
             newOptions = [
                 f"1\N{COMBINING ENCLOSING KEYCAP} Would you like to trigger your own keywords? (currently {owntrigger})",
                 f"2\N{COMBINING ENCLOSING KEYCAP} Would you like to be DMed if your keyword is said in a quote? (currently {quotetrigger})",
                 f"3\N{COMBINING ENCLOSING KEYCAP} Would you like the DMs to be embedded? (currently {embedmessage})"
+                f"4\N{COMBINING ENCLOSING KEYCAP} Would you like to be DMed on message edits? (currently {editmessage})"
             ]
             await message.edit(content=("\n".join(newOptions)))
 
