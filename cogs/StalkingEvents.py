@@ -200,7 +200,12 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             if channel.permissions_for(member).read_messages is False:
                 self.bot.logger.debug(f"Not sending message to {user_id} because of missing permissions")
                 continue
-
+            
+            # Checks if the message is edited and if the user wants edited messages
+            if edited_message and settings_dict[member.id]['settings'].get('editmessage', True) is False:
+                self.bot.logger.debug(f"Not sending message to {user_id} because of editmessage")
+                continue
+                
             # Generate the content to be sent to the user
             if settings_dict[member.id]['settings'].get('embedmessage', False):
                 if edited_message:
