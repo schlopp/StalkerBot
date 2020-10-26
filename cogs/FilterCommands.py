@@ -95,8 +95,10 @@ class FilterCommands(commands.Cog, name="Filter Commands"):
         serverNames = [i.name for i in serverObjects]
 
         userFilters = [i['userfilter'] for i in userRows]
-        userObjects = [self.bot.get_user(o) for o in userFilters]
-        userNames = [i.mention for i in userObjects]
+        # userObjects = [self.bot.get_user(o) for o in userFilters]
+        # userNames = [i.mention for i in userObjects if i is not None]
+        userNames = [f"<@{uid}>" for uid in userFilters]
+
 
         # Empty Checks
         if len(textFilters) < 1:
