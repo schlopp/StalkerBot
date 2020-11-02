@@ -162,7 +162,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                 continue
 
             # Filter out bots
-            if settings_dict[member.id]['settings'].get('bottrigger', True):
+            if settings_dict[member.id]['settings'].get('bottrigger', True) is False:
                 if message.author.bot:
                     return
 
