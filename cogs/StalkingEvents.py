@@ -37,6 +37,10 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             return
         channel = message.channel
 
+        # Filter out StalkerBot
+        if message.author == message.guild.me:
+            return
+
         # React with eyes if message contains "Stalker" lol (only on Voxel Fox)
         if guild.id == 208895639164026880:
             if "stalker" in message.content.lower():
