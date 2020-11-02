@@ -10,6 +10,8 @@ from discord.ext import commands
 
 class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
 
+    STALKER_CHANNEL = 772615385102549022
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -29,8 +31,8 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         if not self.bot.is_ready():
             return
 
-        # Filter out bots
-        if message.author.bot:
+        # Filter out StalkerBot
+        if message.author == message.guild.me:
             return
 
         # Checks that it isn't a DM
@@ -43,6 +45,15 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         if guild.id == 208895639164026880:
             if "stalker" in message.content.lower():
                 await message.add_reaction("👀")
+
+        # Send a message to a channel on the StalkerBot test server if "stalkerbot" or the bot's id is in the message
+        if "stalkerbot" in message.content.lower() or f"{message.guild.me.id}" in message.content.lower():
+            embed = discord.Embed()
+            embed.set_author(name=str(message.author), icon_url=message.author.avatar_url)
+            embed.set_footer(text=f"Author: `{message.author.id}``, Guild: `{message.guild.id}`")
+            embed.description = message
+            await self.bot.get_channel(self.STALKER_CHANNEL).send(embed=embed)
+                
 
         # Stalk people list
         all_message_stalks = {} #{'megan': 413797321273245696, 'sapnap': 606044593624055820, 'hero': 322542134546661388}
