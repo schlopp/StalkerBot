@@ -201,8 +201,8 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                     content = None
             for kw in settings_dict[member.id]['filters']['textfilters']:
                 if kw.lower() in message.content.lower() and content is not None:
+                    content = re.sub(re.escape(kw), "", content)
                     content = re.sub(re.escape(kw.lower()), "", content)
-                    content = re.sub(re.escape(kw, "", content)
 
             # If there's no content to be examined, let's just skip the message
             if content is None or content.strip() == "":
