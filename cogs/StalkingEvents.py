@@ -31,10 +31,6 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
         if not self.bot.is_ready():
             return
 
-        # Filter out StalkerBot
-        if message.author == message.guild.me:
-            return
-
         # Checks that it isn't a DM
         guild = message.guild
         if guild is None:
@@ -161,7 +157,12 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                 self.bot.logger.debug(f"Member {user_id} in guild {guild.id} doesn't exist :/")
                 continue
 
-            # If the keyword is only for a certain guild and it ISNT this one, continue
+            # Filter out bots
+            if settings_dict[member.id]['settings'].get('bottrigger', True):
+                if message.author.bot:
+                    return
+
+            # If the keyword is only for a certain guild and it ISN'T this one, continue
             if row.get('serverid') is not None and message.guild.id != row['serverid']:
                 self.bot.logger.debug(f"Not sending message to {user_id} because of guild specific keyword")
                 continue
