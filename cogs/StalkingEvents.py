@@ -200,8 +200,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                     self.bot.logger.debug(f"Not sending message to {user_id} because of user filter")
                     content = None
             for kw in settings_dict[member.id]['filters']['textfilters']:
-                if kw.lower() in message.content.lower() and content is not None:
-                    content = re.sub(re.escape(kw.lower()), "", content)
+                if kw in message.content and content is not None:
                     content = re.sub(re.escape(kw, "", content)
 
             # If there's no content to be examined, let's just skip the message
