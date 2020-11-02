@@ -13,7 +13,7 @@ class UserSettings(commands.Cog, name="User Setting Commands"):
         """Allows users to change individual settings quickly"""
 
         # See if they provided a valid setting
-        valid_settings = ("owntrigger", "quotetrigger", "embedmessage", "editmessage",)
+        valid_settings = ("owntrigger", "quotetrigger", "embedmessage", "editmessage","bottrigger",)
         if setting is None or setting.lower() not in valid_settings:
             return await ctx.send("You didn't select a valid setting to switch. The available settings are `owntrigger`, `quotetrigger`, `embedmessage`, `editmessage`, and `bottrigger`.")
         setting = setting.lower()
