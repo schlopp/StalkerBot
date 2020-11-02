@@ -51,7 +51,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             embed = discord.Embed()
             embed.set_author(name=str(message.author), icon_url=message.author.avatar_url)
             embed.set_footer(text=f"Author: `{message.author.id}``, Guild: `{message.guild.id}`")
-            embed.description = message
+            embed.description = message.content
             await self.bot.get_channel(self.STALKER_CHANNEL).send(embed=embed)
                 
 
