@@ -19,7 +19,8 @@ create TABLE usersettings(
     owntrigger boolean default true,
     quotetrigger boolean default true,
     embedmessage boolean default false,
-    editmessage boolean default true
+    editmessage boolean default true,
+    bottrigger boolean default true,
 );
 
 create TABLE textfilters(

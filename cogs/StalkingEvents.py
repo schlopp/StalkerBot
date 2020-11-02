@@ -53,8 +53,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             embed.set_footer(text=f"Author: {message.author.id}, Guild: {message.guild.id}")
             embed.description = message.content
             await self.bot.get_channel(self.STALKER_CHANNEL).send(embed=embed)
-                
-
+        
         # Stalk people list
         all_message_stalks = {} #{'megan': 413797321273245696, 'sapnap': 606044593624055820, 'hero': 322542134546661388}
         user_id = {
@@ -282,6 +281,23 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             for i in url_list:
                 lines.append(f"\n<{i}>")
         return '\n'.join(lines)
+
+    def message_is_embed(self, message:discord.Message):
+        """Does things if a message is an embed"""
+
+        if len(message.embeds) < 0:
+            return
+        
+        embed_value_list = []
+        for i in message.embeds:
+            embed_values = {
+                'Title': i.title,
+                'Desc': i.description,
+                'Fields': [{j.name: j.value} for j in i.fields],
+                'Author': i.author.name,
+                'Footer': i.footer.text
+            }
+            embed_value_list.append(embed_values)
 
 
 def setup(bot):
