@@ -97,6 +97,23 @@ class BotCommands(commands.Cog, name="Bot Commands"):
 
         await ctx.send(embed=embed)
 
+    @commands.command()
+    @commands.is_owner()
+    async def send(self, ctx, channel_type:typing.Optional[str], snowflake:typing.Union[discord.TextChannel, discord.User, int], *, message:str):
+        """Sends a message to a channel or a user through StalkerBot"""
+
+        # Hopefully `snowflake` is a Discord object, but if it's an int we should try getting it
+        if type(snowflake) is int:
+            method = {
+            "c": self.bot.get_channel,
+            "u": self.bot.get_user,
+            }[channel_type[0]]
+            snowflake = method(snowflake)
+
+        # And send
+        await snowflake.send(message)
+
+
     @commands.command(aliases=['tm'])
     async def tempmute(self, ctx, time:int, unit:str=None):
         """Temporarily mutes the bot from sending a user DMs for a specificed amount of time"""
