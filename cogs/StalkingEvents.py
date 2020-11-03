@@ -46,13 +46,13 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             if "stalker" in message.content.lower():
                 await message.add_reaction("👀")
 
-        # Send a message to a channel on the StalkerBot test server if "stalkerbot" or the bot's id is in the message
-        if "stalkerbot" in message.content.lower() or f"{message.guild.me.id}" in message.content.lower():
-            embed = discord.Embed()
-            embed.set_author(name=str(message.author), icon_url=message.author.avatar_url)
-            embed.set_footer(text=f"Author: {str(message.author)} ({message.author.id})\nChannel: {message.channel.name} ({message.channel.id})\nGuild: {message.guild.name} ({message.guild.id})")
-            embed.description = message.content
-            await self.bot.get_channel(self.STALKER_CHANNEL).send(embed=embed)
+        # # Send a message to a channel on the StalkerBot test server if "stalkerbot" or the bot's id is in the message
+        # if "stalkerbot" in message.content.lower() or f"{message.guild.me.id}" in message.content.lower():
+        #     embed = discord.Embed()
+        #     embed.set_author(name=str(message.author), icon_url=message.author.avatar_url)
+        #     embed.set_footer(text=f"Author: {str(message.author)} ({message.author.id})\nChannel: {message.channel.name} ({message.channel.id})\nGuild: {message.guild.name} ({message.guild.id})")
+        #     embed.description = message.content
+        #     await self.bot.get_channel(self.STALKER_CHANNEL).send(embed=embed)
         
         # Stalk people list
         all_message_stalks = {} #{'megan': 413797321273245696, 'sapnap': 606044593624055820, 'hero': 322542134546661388}
