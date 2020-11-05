@@ -19,7 +19,13 @@ class BotCommands(commands.Cog, name="Bot Commands"):
 
     @commands.command(aliases=['hero', 'h'], hidden=True)
     @commands.bot_has_permissions(attach_files=True)
-    async def heroify(self, ctx, url:typing.Union[discord.User or discord.ClientUser, str]=None):
+    async def heroify(self, ctx, ident, url:typing.Union[discord.User or discord.ClientUser, str]=None):
+
+        # Decide what type of H to use
+        h_type = {
+            "c": 'images/cursive_hero_h.png',
+            "n": 'images/hero_h.png',
+        }[ident[0]]
 
         # Check if the image should be a user PFP
         if isinstance(url, discord.User):
@@ -42,7 +48,7 @@ class BotCommands(commands.Cog, name="Bot Commands"):
 
         # Assign variables for the images (the image sent by user and the H)
         base_image = Image.open(image_file)
-        h_image = Image.open("images/hero_h.png")
+        h_image = Image.open(h_type)
 
         # Resize the base image to be the same size as the H
         base_image = base_image.resize(h_image.size)
