@@ -280,14 +280,15 @@ class BotCommands(commands.Cog, name="Bot Commands"):
 
         database_option = {
             'g': "DELETE FROM keywords WHERE userid = $1;",
-            's': "DELETE FROM serverkeywords WHERE userid = $1;"
+            's': "DELETE FROM serverkeywords WHERE userid = $1;",
+            'n': None
         }[ident.lower()[0]]
 
-        async with self.bot.database() as db:
-            await db(database_option, ctx.author.id)
-            await db(database_option, ctx.author.id)
+        if ident.lower()[0] != "n":
+            async with self.bot.database() as db:
+                await db(database_option, ctx.author.id)
+                await db(database_option, ctx.author.id)
 
-        self.bot.logger.debug(ident)
         delete_type = {
             'g': "global",
             's': "server",
