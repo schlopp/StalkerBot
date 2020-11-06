@@ -287,11 +287,12 @@ class BotCommands(commands.Cog, name="Bot Commands"):
             await db(database_option, ctx.author.id)
             await db(database_option, ctx.author.id)
 
+        self.bot.logger.debug(ident)
         delete_type = {
             'g': "global",
             's': "server",
             'n': "all"
-        }[ident[0].lower()]
+        }[ident.lower()[0]]
 
         await ctx.send(f"Removed {delete_type} keywords from <@{ctx.author.id}>'s list")
 
