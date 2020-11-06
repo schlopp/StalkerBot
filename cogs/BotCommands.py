@@ -195,7 +195,7 @@ class BotCommands(commands.Cog, name="Bot Commands"):
 
     @commands.command(aliases=['serverkeyword', 'addserver'])
     async def addserverkeyword(self, ctx, serverid:int, keyword:str):
-        """Adds a keyword to your list of DM triggers"""
+        """Adds a keyword to your list of server-specific DM triggers"""
 
         # Checks if the server exists
         server = self.bot.get_guild(serverid)
@@ -250,7 +250,7 @@ class BotCommands(commands.Cog, name="Bot Commands"):
 
     @commands.command(aliases=['serverkeywordremove', 'removeserver'])
     async def removeserverkeyword(self, ctx, serverid:int, keyword:str):
-        """Removes a keyword from your list of DM triggers"""
+        """Removes a keyword from your list of server-specific DM triggers"""
 
         keyword = keyword.lower()
 
@@ -269,12 +269,31 @@ class BotCommands(commands.Cog, name="Bot Commands"):
         await ctx.send(f"Removed `{keyword}` from <@{ctx.author.id}>'s list")
 
     @commands.command()
-    async def removeall(self, ctx):
-        """Removes all keywords from your list of DM triggers"""
+    async def removeall(self, ctx, ident=None):
+        """Removes all keywords from your list of DM triggers given an optional type (global/server)"""
+
+        if ident is None:
+            async with self.bot.database() as db:
+                await db("DELETE FROM keywords WHERE userid = $1;", ctx.author.id)
+                await db("DELETE FROM serverkeywords WHERE userid = $1;", ctx.author.id)
+            ident = "None"
+
+        database_option = {
+            'g': "DELETE FROM keywords WHERE userid = $1;",
+            's': "DELETE FROM serverkeywords WHERE userid = $1;"
+        }[ident.lower()[0]]
 
         async with self.bot.database() as db:
-            await db("DELETE FROM keywords WHERE userid = $1;", ctx.author.id)
-        await ctx.send(f"Deleted all the keywords from <@{ctx.author.id}>'s list")
+            await db(database_option, ctx.author.id)
+            await db(database_option, ctx.author.id)
+
+        delete_type = {
+            'g': "global",
+            's': "server",
+            'n': "all"
+        }[ident[0].lower()]
+
+        await ctx.send(f"Removed {delete_type} keywords from <@{ctx.author.id}>'s list")
 
     @commands.command(aliases=['keywords', 'keywordlist', 'keywordslist', 'list'])
     async def listkeywords(self, ctx):
@@ -294,7 +313,7 @@ class BotCommands(commands.Cog, name="Bot Commands"):
 
     @commands.command(aliases=['serverkeywords', 'serverkeywordlist', 'serverkeywordslist', 'serverlist'])
     async def listserverkeywords(self, ctx):
-        """Lists all your keywords"""
+        """Lists all your server-specific keywords"""
 
         async with self.bot.database() as db:
             rows = await db("SELECT * FROM serverkeywords WHERE userid = $1;", ctx.author.id)
