@@ -119,6 +119,9 @@ class BotCommands(commands.Cog, name="Bot Commands"):
         # And send
         await snowflake.send(message)
 
+        # React to the command message
+        await ctx.message.add_reaction("👌")
+
 
     @commands.command(aliases=['tm'])
     async def tempmute(self, ctx, time:int, unit:str=None):
