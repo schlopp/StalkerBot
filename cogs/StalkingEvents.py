@@ -250,7 +250,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             before, message = None, message
 
         embed = discord.Embed()
-        color = random.randint(0, 0xffffff)
+        color = abs(hash(keyword)) & 0xffffff #random.randint(0, 0xffffff)
         embed.color = color
         embed.set_author(name=str(message.author), icon_url=message.author.avatar_url)
         if before:
