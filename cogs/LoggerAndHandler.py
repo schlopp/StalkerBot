@@ -50,7 +50,7 @@ class LoggerAndHandler(commands.Cog, name="Logger And Handler"):
 
         # Webhook Sending
         embed = discord.Embed()
-        embed.color = 0xFF000000
+        embed.color = 0xFF0000
         embed.title = ctx.message.content
         embed.set_footer(text=f"Author: {str(ctx.author)} ({ctx.author.id})\nChannel: {ctx.channel.name} ({ctx.channel.id})\nGuild: {ctx.guild.name} ({ctx.guild.id})")
         async with aiohttp.ClientSession() as session:
