@@ -60,7 +60,7 @@ class LoggerAndHandler(commands.Cog, name="Logger And Handler"):
                 data.seek(0)
                 await webhook.send(file=discord.File(data, filename="error.py"))
             else:
-                embed.description = error
+                embed.description = str(error)
                 await webhook.send(embed=embed)
                 #await webhook.send(f"```py\n{error}```\n`{str(ctx.author)}`(`{ctx.author.id}`)\n`{ctx.message.content}`")
 
