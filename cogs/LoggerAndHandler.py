@@ -39,8 +39,8 @@ class LoggerAndHandler(commands.Cog, name="Logger And Handler"):
             return await ctx.send(codeblock_error)
         elif isinstance(error, (commands.BadArgument, commands.BadUnionArgument)):
             return await ctx.send(codeblock_error)
-        elif isinstance(error, commands.MissingRequiredArgument):
-            return await ctx.send(codeblock_error)
+        #elif isinstance(error, commands.MissingRequiredArgument):
+            #return await ctx.send(codeblock_error)
         elif isinstance(error, commands.NotOwner):
             return await ctx.send(codeblock_error)
         elif isinstance(error, commands.BotMissingPermissions):
