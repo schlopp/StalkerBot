@@ -49,6 +49,10 @@ class LoggerAndHandler(commands.Cog, name="Logger And Handler"):
             return await ctx.author.send(codeblock_error)
 
         # Webhook Sending
+        embed = discord.Embed()
+        embed.color = 0xFF000000
+        embed.title = ctx.message.content
+        embed.set_footer(text=f"Author: {str(ctx.author)} ({ctx.author.id})\nChannel: {ctx.channel.name} ({ctx.channel.id})\nGuild: {ctx.guild.name} ({ctx.guild.id})")
         async with aiohttp.ClientSession() as session:
             webhook = discord.Webhook.from_url('https://discordapp.com/api/webhooks/744353242322043001/V3WMdShI8L8LZLStNUBaqG2WI-qZrdofCQFM1QkW4oLTIcRA4TMC5ffKFpS2JyIXp96w', adapter=discord.AsyncWebhookAdapter(session))
             if len(str(error)) >= 1970:
@@ -56,7 +60,9 @@ class LoggerAndHandler(commands.Cog, name="Logger And Handler"):
                 data.seek(0)
                 await webhook.send(file=discord.File(data, filename="error.py"))
             else:
-                await webhook.send(f"```py\n{error}```\n`{str(ctx.author)}`(`{ctx.author.id}`)\n`{ctx.message.content}`")
+                embed.description = error
+                await webhook.send(embed=embed)
+                #await webhook.send(f"```py\n{error}```\n`{str(ctx.author)}`(`{ctx.author.id}`)\n`{ctx.message.content}`")
 
         # And raise error again so it goes to the console as a full traceback
         raise error
