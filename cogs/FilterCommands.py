@@ -58,6 +58,8 @@ class FilterCommands(commands.Cog, name="Filter Commands"):
     @filter.command(name="user")
     async def filter_user(self, ctx, filter:int=None):
         """Adds a server filter"""
+        
+        user = None
 
         if filter is not None:
             user = self.bot.get_user(filter) or await self.bot.fetch_user(filter)
