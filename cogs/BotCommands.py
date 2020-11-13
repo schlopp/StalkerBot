@@ -23,8 +23,8 @@ class BotCommands(commands.Cog, name="Bot Commands"):
 
         # Decide what type of H to use
         h_type = {
-            "c": 'images/cursive_hero_h.png',
-            "n": 'images/hero_h.png',
+            "h": 'images/cursive_hero_h.png',
+            "H": 'images/hero_h.png',
             "a": 'images/aiko_a.png'
         }[ident[0]]
 
