@@ -23,10 +23,10 @@ class BotCommands(commands.Cog, name="Bot Commands"):
 
         # Decide what type of H to use
         h_type = {
-            "h": 'images/cursive_hero_h.png',
-            "H": 'images/hero_h.png',
-            "a": 'images/aiko_a.png',
-            "l": 'images/lemon.png'
+            "h": 'images/cursive_hero_h.png', # Cursive H
+            "H": 'images/hero_h.png', # Normal H
+            "a": 'images/aiko_a.png', # Aiko A
+            "l": 'images/lemon.png' # Lemon
         }[ident[0]]
 
         # Check if the image should be a user PFP
