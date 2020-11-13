@@ -170,6 +170,10 @@ class FilterCommands(commands.Cog, name="Filter Commands"):
 
         await ctx.send("Done.")
 
+    @commands.command()
+    async def block(self, ctx, user:discord.User):
+        """Blocks a given user by invoking filter user"""
+        return await ctx.invoke(self.bot.get_command("filter user"), user.id)
 
 def setup(bot):
     bot.add_cog(FilterCommands(bot))
