@@ -37,7 +37,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             if not message.content.startswith("s.") and message.author.id != 723813550136754216: #Stalker's ID
                 embed = discord.Embed()
                 embed.set_author(name=str(message.author), icon_url=message.author.avatar_url)
-                embed.set_footer(text=f"Author: {str(message.author)} ({message.author.id})")
+                embed.set_footer(text=f"Author: {str(message.author)} ({message.author.id})\n Message ID: {message.id}")
                 if message.attachments:
                     url_list = [i.url for i in message.attachments]
                     lines = ""
