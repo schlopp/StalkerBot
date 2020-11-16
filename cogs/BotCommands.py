@@ -19,15 +19,22 @@ class BotCommands(commands.Cog, name="Bot Commands"):
 
     @commands.command(aliases=['hero', 'h'], hidden=True)
     @commands.bot_has_permissions(attach_files=True)
-    async def heroify(self, ctx, ident, url:typing.Union[discord.User or discord.ClientUser, str]=None):
+    async def heroify(self, ctx, ident=None, url:typing.Union[discord.User or discord.ClientUser, str]=None):
+
+        # Send message if no ident provided
+        if ident is None:
+            return await ctx.send("You didn't provide a valid heroify identifier (h, H, A, l)")
 
         # Decide what type of H to use
-        h_type = {
-            "h": 'images/cursive_hero_h.png', # Cursive H
-            "H": 'images/hero_h.png', # Normal H
-            "a": 'images/aiko_a.png', # Aiko A
-            "l": 'images/lemon.png' # Lemon
-        }[ident[0]]
+        try:
+            h_type = {
+                "h": 'images/cursive_hero_h.png', # Cursive H
+                "H": 'images/hero_h.png', # Normal H
+                "A": 'images/aiko_a.png', # Aiko A
+                "l": 'images/lemon.png' # Lemon
+            }[ident[0]]
+        except KeyError:
+            return await ctx.send("You didn't provide a valid heroify identifier (h, H, A, l)")
 
         # Check if the image should be a user PFP
         if isinstance(url, discord.User):
