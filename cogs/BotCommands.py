@@ -125,7 +125,7 @@ class BotCommands(commands.Cog, name="Bot Commands"):
         await ctx.message.add_reaction("👌")
 
 
-    @commands.command(aliases=['tm'])
+    @commands.command(aliases=['tm', 'mute'])
     async def tempmute(self, ctx, time:int, unit:str=None):
         """Temporarily mutes the bot from sending a user DMs for a specificed amount of time"""
         unit = unit.lower()
