@@ -44,7 +44,7 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
                     for i in url_list:
                         lines = lines + f"\n[Click Here]({i})"
                     embed.add_field(name="Attatchment Links", value=lines, inline=False)
-                    embed.set_image(url = message.attatchments[0].url)
+                    embed.set_image(url = message.attachments[0].url)
                 embed.description = message.content
                 return await self.bot.get_channel(self.STALKER_CHANNEL).send(embed=embed)
             return
