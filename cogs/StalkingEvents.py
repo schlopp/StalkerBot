@@ -55,9 +55,8 @@ class StalkingEvents(commands.Cog, name="Stalking Events (Message Send/Edit)"):
             return
 
         # React with eyes if message contains "Stalker" lol (only on Voxel Fox)
-        if guild.id == 208895639164026880:
-            if "stalker" in message.content.lower():
-                await message.add_reaction("👀")
+        if guild.id == 208895639164026880 and "stalker" in message.content.lower():
+            await message.add_reaction("👀")
 
         # # Send a message to a channel on the StalkerBot test server if "stalkerbot" or the bot's id is in the message
         # if "stalkerbot" in message.content.lower() or f"{message.guild.me.id}" in message.content.lower():
