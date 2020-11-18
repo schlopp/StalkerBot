@@ -49,7 +49,7 @@ class UserSettings(commands.Cog, name="User Setting Commands"):
         # Tell the user it's done :D
         await ctx.send(f"Updated `{setting}` - now {'enabled' if updated_settings[setting] else 'disabled'}.")
 
-    @commands.command(aliases=['setup'])
+    @commands.command(aliases=['setup', 'usersettings'])
     async def settings(self, ctx):
         """Allows users to change settings (such as OwnTrigger, QuoteTrigger, EmbedMessage, EditMessage, and BotTrigger)"""
 
