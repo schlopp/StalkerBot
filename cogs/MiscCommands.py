@@ -99,8 +99,10 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
                     image_bytes = await r.read()
 
             image_file = io.BytesIO(image_bytes)
-            
-            return await snowflake.send(message, file=discord.File(image_file, filename="image.png"))
+            if message:
+                return await snowflake.send(message, file=discord.File(image_file, filename="image.png"))
+            else: 
+                return await snowflake.send(file=discord.File(image_file, filename="image.png"))
 
         # And send
         await snowflake.send(message)
