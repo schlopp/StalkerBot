@@ -92,6 +92,16 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
             }[channel_type[0]]
             snowflake = method(snowflake)
 
+        # Different send if the message had attachments
+        if ctx.message.attatchments:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(ctx.message.attachments[0].url) as r:
+                    image_bytes = await r.read()
+
+            image_file = io.BytesIO(image_bytes)
+            
+            return await snowflake.send(message, file=discord.File(image_file, filename="image.png"))
+
         # And send
         await snowflake.send(message)
 
