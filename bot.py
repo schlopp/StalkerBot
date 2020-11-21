@@ -96,10 +96,11 @@ async def change_presence_loop():
 async def reloadall(ctx):
     """Reloads all the cogs"""
 
-    [bot.reload_extension(i[:-3].replace(os.sep, ".")) for i in glob.glob("cogs/*.py")]
-    await ctx.send("🔁 Reloaded all cogs.")
+    [bot.reload_extension(i[:-3].replace(os.sep, ".")) for i in glob.glob("cogs/*.py") if i[5] != "_"]
+    await ctx.send("🔁 Reloaded all loadable cogs.")
+    
 
 
-[bot.load_extension(i[:-3].replace(os.sep, ".")) for i in glob.glob("cogs/*.py")]
+[bot.load_extension(i[:-3].replace(os.sep, ".")) for i in glob.glob("cogs/*.py") if i[5] != "_"]
 bot.load_extension("jishaku")
 bot.run(bot_token)
