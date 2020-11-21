@@ -86,8 +86,11 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
         # And send
         await snowflake.send(message)
 
-        # React to the command message
-        await ctx.message.add_reaction("👌")
+        # React to (or delete) the command message
+        if snowflake == ctx.channel:
+            await ctx.message.delete()
+        else:
+            await ctx.message.add_reaction("👌")
         
     @commands.command(hidden=True)
     async def react(self, ctx, messageid, reaction="okay"):
