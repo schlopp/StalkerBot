@@ -6,7 +6,7 @@ import aiohttp
 import io
 from PIL import Image
 
-from converters import _send_type
+from converters import send_type, send_snowflake
 
 class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
 
@@ -70,7 +70,7 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def send(self, ctx, channel_type:typing.Optional[_send_type.SendType], snowflake:typing.Optional[typing.Union[discord.User, discord.TextChannel, int]], *, message:str):
+    async def send(self, ctx, channel_type:typing.Optional[send_type.SendType], snowflake:typing.Optional[typing.Union[discord.User, discord.TextChannel, send_snowflake.SendSnowflake]], *, message:str):
         """Sends a message to a channel or a user through StalkerBot"""
 
         snowflake = snowflake or ctx.channel
