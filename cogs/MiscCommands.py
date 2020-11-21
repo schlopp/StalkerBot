@@ -80,32 +80,34 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
     async def send(self, ctx, channel_type:typing.Optional[send_type.SendType], snowflake:typing.Optional[typing.Union[discord.User, discord.TextChannel, send_snowflake.SendSnowflake]], *, message:str=None):
         """Sends a message to a channel or a user through StalkerBot"""
 
+        # Set the user to whoever last DMed stalkerbot
         if channel_type == "u":
             snowflake = snowflake or self.bot.get_user(self.bot.last_dm)
-        snowflake = snowflake or ctx.channel
 
+        snowflake = snowflake or ctx.channel
         # Hopefully `snowflake` is a Discord object, but if it's an int we should try getting it
         if type(snowflake) is int:
             method = {
-            "c": self.bot.get_channel,
-            "u": self.bot.get_user,
+                "c": self.bot.get_channel,
+                "u": self.bot.get_user,
             }[channel_type[0]]
             snowflake = method(snowflake)
+
+        # Set up what we want to send
+        payload = {
+            "content": message,
+        }
 
         # Different send if the message had attachments
         if ctx.message.attachments:
             async with aiohttp.ClientSession() as session:
                 async with session.get(ctx.message.attachments[0].url) as r:
                     image_bytes = await r.read()
-
             image_file = io.BytesIO(image_bytes)
-            if message:
-                return await snowflake.send(message, file=discord.File(image_file, filename="image.png"))
-            else: 
-                return await snowflake.send(file=discord.File(image_file, filename="image.png"))
+            payload["file"] = discord.File(image_file, filename="image.png")
 
         # And send
-        await snowflake.send(message)
+        await snowflake.send(**payload)
 
         # React to (or delete) the command message
         if snowflake == ctx.channel:
