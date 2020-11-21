@@ -6,7 +6,7 @@ import aiohttp
 import io
 from PIL import Image
 
-from cogs import _send_type
+from converters import _send_type
 
 class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
 
