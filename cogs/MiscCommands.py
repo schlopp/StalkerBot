@@ -93,7 +93,7 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
             snowflake = method(snowflake)
 
         # Different send if the message had attachments
-        if ctx.message.attatchments:
+        if ctx.message.attachments:
             async with aiohttp.ClientSession() as session:
                 async with session.get(ctx.message.attachments[0].url) as r:
                     image_bytes = await r.read()
