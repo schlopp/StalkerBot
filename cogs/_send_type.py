@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-class send_type(commands.Converter):
+class SendType(commands.Converter):
 
   async def convert(self, ctx, value):
     # This function accepts channeltypes of 'c' and 'u'
