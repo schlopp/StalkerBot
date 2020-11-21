@@ -12,6 +12,13 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
 
     def __init__(self, bot):
         self.bot = bot
+        self.last_dm = None
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+
+        if message.guild is None and not message.content.startswith("s.") and message.author.id != 723813550136754216: # If the message is in DMs, and it isn't a command, and it isn't sent by StalkerBot
+            self.bot.last_dm = message.author.id
 
     @commands.command(aliases=['hero', 'h'], hidden=True)
     @commands.bot_has_permissions(attach_files=True)
@@ -73,6 +80,8 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
     async def send(self, ctx, channel_type:typing.Optional[send_type.SendType], snowflake:typing.Optional[typing.Union[discord.User, discord.TextChannel, send_snowflake.SendSnowflake]], *, message:str):
         """Sends a message to a channel or a user through StalkerBot"""
 
+        if channel_type == "u":
+            snowflake = snowflake or self.bot.get_user(self.bot.last_dm)
         snowflake = snowflake or ctx.channel
 
         # Hopefully `snowflake` is a Discord object, but if it's an int we should try getting it
