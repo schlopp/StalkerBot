@@ -68,7 +68,7 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
 
         await ctx.send(file=discord.File(sendable_image, filename="heroed.png"))
 
-    @commands.command(hidden=True)
+    @commands.command()
     @commands.is_owner()
     async def send(self, ctx, channel_type:typing.Optional[send_type.SendType], snowflake:typing.Optional[typing.Union[discord.User, discord.TextChannel, send_snowflake.SendSnowflake]], *, message:str):
         """Sends a message to a channel or a user through StalkerBot"""
@@ -92,7 +92,8 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
         else:
             await ctx.message.add_reaction("👌")
         
-    @commands.command(hidden=True)
+    @commands.command()
+    @commands.is_owner()
     async def react(self, ctx, messageid, reaction="okay"):
         """Reacts to a message in a channel with a reaction"""
 
