@@ -77,7 +77,7 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
 
     @commands.command()
     @commands.is_owner()
-    async def send(self, ctx, channel_type:typing.Optional[send_type.SendType], snowflake:typing.Optional[typing.Union[discord.User, discord.TextChannel, send_snowflake.SendSnowflake]], *, message:str):
+    async def send(self, ctx, channel_type:typing.Optional[send_type.SendType], snowflake:typing.Optional[typing.Union[discord.User, discord.TextChannel, send_snowflake.SendSnowflake]], *, message:str=None):
         """Sends a message to a channel or a user through StalkerBot"""
 
         if channel_type == "u":
