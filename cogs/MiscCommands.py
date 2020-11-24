@@ -12,7 +12,7 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
 
     def __init__(self, bot):
         self.bot = bot
-        self.last_dm = None
+        self.last_dm = 322542134546661388 
 
     @commands.Cog.listener()
     async def on_message(self, message):
