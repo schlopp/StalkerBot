@@ -20,6 +20,24 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
         if message.guild is None and not message.content.startswith("s.") and message.author.id != 723813550136754216: # If the message is in DMs, and it isn't a command, and it isn't sent by StalkerBot
             self.bot.last_dm = message.author.id
 
+    @commands.command()
+    async def invite(self, ctx):
+        """Sends an invite link for the bot"""
+
+        bot_permissions = discord.Permissions(
+            read_messages=True,
+            send_messages=True
+        )
+        url = f"<https://discord.com/api/oauth2/authorize?client_id=723813550136754216&permissions={bot_permissions.value}&scope=bot>"
+        await ctx.send(url)
+
+    @commands.command(aliases=['support'])
+    async def server(self, ctx):
+        """Sends an invite link for the support server"""
+
+        url = "https://discord.com/invite/x34DnGj"
+        await ctx.send(url)
+
     @commands.command(aliases=['hero', 'h'], hidden=True)
     @commands.bot_has_permissions(attach_files=True)
     async def heroify(self, ctx, ident='h', url:typing.Union[discord.User or discord.ClientUser, str]=None):

@@ -17,25 +17,6 @@ class BotCommands(commands.Cog, name="Bot Commands"):
     def __init__(self, bot):
         self.bot = bot
 
-
-    @commands.command()
-    async def invite(self, ctx):
-        """Sends an invite link for the bot"""
-
-        bot_permissions = discord.Permissions(
-            read_messages=True,
-            send_messages=True
-        )
-        url = f"<https://discord.com/api/oauth2/authorize?client_id=723813550136754216&permissions={bot_permissions.value}&scope=bot>"
-        await ctx.send(url)
-
-    @commands.command(aliases=['support'])
-    async def server(self, ctx):
-        """Sends an invite link for the support server"""
-
-        url = "https://discord.com/invite/x34DnGj"
-        await ctx.send(url)
-
     @commands.command(aliases=['upvote'])
     async def vote(self, ctx):
         """Sends the voting links"""
