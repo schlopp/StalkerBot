@@ -34,6 +34,7 @@ class MiscCommands(commands.Cog, name="Miscellaneous Commands"):
                 "h": 'images/cursive_hero_h.png', # Cursive H
                 "H": 'images/hero_h.png', # Normal H
                 "A": 'images/aiko_a.png', # Aiko A
+                "L": 'images/liz_l.png', # Liz L
                 "l": 'images/lemon.png' # Lemon
             }[ident[0]]
         except KeyError:
