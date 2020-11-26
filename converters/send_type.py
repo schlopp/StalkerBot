@@ -1,9 +1,9 @@
-import discord
 from discord.ext import commands
 
 class SendType(commands.Converter):
 
   async def convert(self, ctx, value):
+    
     # This function accepts channeltypes of 'c' and 'u'
     if value.lower() == 'c' or value.lower() == 'u' and len(value) == 1:
       return value
