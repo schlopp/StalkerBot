@@ -8,6 +8,8 @@ class SchloppCog(utils.Cog, name="SchloppShowingHisLove"):
     def __init__(self, bot):
         self.bot = bot
 
+    # I'm boutta have fun with this one
+
     @utils.command(hidden=True)    
     async def takegeorgeoutfordinner(self, ctx):
         """Takes george out to dinner"""
